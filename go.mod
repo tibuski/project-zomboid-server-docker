@@ -1,3 +1,3 @@
 module github.com/tibuski/project-zomboid-server-docker
 
-go 1.23
+go 1.26

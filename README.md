@@ -131,6 +131,21 @@ See [CONFIGURATION.md](docs/CONFIGURATION.md) for the full reference. The most i
 docker build -t project-zomboid-server .
 ```
 
+### Podman
+
+The image is Podman-compatible -- it builds and runs under Podman as well:
+
+```bash
+podman build --format docker -t project-zomboid-server .
+```
+
+One caveat: the Dockerfile uses a `HEALTHCHECK` and BuildKit cache mounts, both
+of which Podman supports. With the default OCI output format Podman ignores the
+`HEALTHCHECK`; pass `--format docker` to keep it active under Podman. The
+pre-built image from the container registry behaves the same under Podman
+except that the healthcheck is not surfaced -- this is cosmetic and does not
+affect server operation.
+
 ## License
 
 [MIT](LICENSE)
