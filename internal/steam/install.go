@@ -323,7 +323,7 @@ func resolveCollectionAPI(cfg *config.ServerConfig, collectionID string) ([]stri
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Steam API returned status %d", resp.StatusCode)
+		return nil, fmt.Errorf("steam API returned status %d", resp.StatusCode)
 	}
 
 	var out struct {
