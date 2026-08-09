@@ -13,7 +13,8 @@ A Docker container for the Project Zomboid dedicated server. Built from the grou
 - **Workshop mods** -- Auto-download mods from Steam Workshop on start
 - **Automatic backups** -- Scheduled world backups with rotation
 - **Auto-restart on updates** -- Detects Workshop mod and game build updates while running, warns players, and restarts to apply them (optional)
-- **Discord webhook** -- Server start, stop, crash, and update notifications
+- **Discord webhook** -- Server start, stop, crash, update, and player join/leave notifications
+- **Spawn regions** -- Restrict the character-creation spawn screen to the maps you choose via `SPAWN_REGIONS`
 - **All config via env vars** -- No need to edit `.ini` files manually
 - **Multi-instance** -- Run multiple servers from one compose file
 - **Go entrypoint** -- Single binary, no shell scripts, proper error handling
@@ -109,6 +110,7 @@ See [CONFIGURATION.md](docs/CONFIGURATION.md) for the full reference. The most i
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `SERVER_NAME` | `servertest` | Server/map name |
+| `SPAWN_REGIONS` | (empty) | Semicolon-separated maps offered on the spawn screen (e.g. `Rosewood, KY`); empty keeps the server default |
 | `PUBLIC_NAME` | `My PZ Server` | Public display name |
 | `ADMIN_PASSWORD` | auto-generated | Admin account password (stored in `data/credentials.env` when unset) |
 | `RCON_PASSWORD` | auto-generated | RCON password (stored in `data/credentials.env` when unset) |

@@ -249,6 +249,7 @@ The following files are auto-generated from environment variables at container s
 
 - `Server/<SERVER_NAME>.ini` -- Main server settings
 - `Server/<SERVER_NAME>_SandboxVars.lua` -- Sandbox/gameplay settings
+- `Server/<SERVER_NAME>_spawnregions.lua` -- Spawn regions offered on the spawn screen (when `SPAWN_REGIONS` is set)
 
 **Note:** If you edit these files manually, your changes will be overwritten on the next container restart. Use environment variables instead.
 
