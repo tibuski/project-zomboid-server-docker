@@ -161,4 +161,10 @@ func TestParseSpawnRegions(t *testing.T) {
 	if got := parseSpawnRegions("Rosewood\nWest Point"); len(got) != 2 || got[0] != "Rosewood" || got[1] != "West Point" {
 		t.Errorf("parseSpawnRegions with newline = %v, want [Rosewood West Point]", got)
 	}
+	// Surrounding quotes (from quoted .env values) are stripped.
+	for _, raw := range []string{`"Rosewood, KY"`, `'West Point, KY'`} {
+		if got := parseSpawnRegions(raw); len(got) != 1 {
+			t.Errorf("parseSpawnRegions(%q) = %v, want 1 entry", raw, got)
+		}
+	}
 }

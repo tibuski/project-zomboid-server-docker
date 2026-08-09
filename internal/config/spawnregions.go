@@ -31,6 +31,9 @@ func parseSpawnRegions(raw string) []string {
 		return r == ';' || r == '\n' || r == '\t'
 	}) {
 		name := strings.TrimSpace(part)
+		if len(name) >= 2 && ((name[0] == '"' && name[len(name)-1] == '"') || (name[0] == '\'' && name[len(name)-1] == '\'')) {
+			name = name[1 : len(name)-1]
+		}
 		if name == "" {
 			continue
 		}
