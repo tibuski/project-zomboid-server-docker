@@ -119,4 +119,3 @@ This sends a graceful shutdown signal: the server saves the world, then exits.
 - [Set up automatic backups](BACKUP.md)
 - [Configure Discord notifications](DISCORD.md)
 - [Add a web admin panel](ADMIN_PANEL.md)
-- [Run multiple servers](MULTI_INSTANCE.md)

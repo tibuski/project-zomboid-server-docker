@@ -16,7 +16,6 @@ A Docker container for the Project Zomboid dedicated server. Built from the grou
 - **Discord webhook** -- Server start, stop, crash, update, and player join/leave notifications
 - **Spawn regions** -- Restrict the character-creation spawn screen to the maps you choose via `SPAWN_REGIONS`
 - **All config via env vars** -- No need to edit `.ini` files manually
-- **Multi-instance** -- Run multiple servers from one compose file
 - **Go entrypoint** -- Single binary, no shell scripts, proper error handling
 - **Rootless** -- Runs as the `steam` user (UID 1000), never as root
 
@@ -81,7 +80,6 @@ docker compose logs -f
 | [PERFORMANCE.md](docs/PERFORMANCE.md) | Tuning for maximum server performance |
 | [MODS.md](docs/MODS.md) | Workshop mod installation guide |
 | [BACKUP.md](docs/BACKUP.md) | Backup, restore, and rotation |
-| [MULTI_INSTANCE.md](docs/MULTI_INSTANCE.md) | Running multiple servers |
 | [ADMIN_PANEL.md](docs/ADMIN_PANEL.md) | Integrating with Zomboid Control Panel |
 | [DISCORD.md](docs/DISCORD.md) | Discord webhook setup |
 | [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common issues and solutions |
@@ -126,18 +124,6 @@ See [CONFIGURATION.md](docs/CONFIGURATION.md) for the full reference. The most i
 | `DISCORD_WEBHOOK_URL` | (empty) | Discord webhook URL |
 | `SANDBOX_*` | (empty) | Any `SANDBOX_`-prefixed variable becomes a `SandboxVars.lua` key (gameplay tuning) |
 | `INI_*` | (empty) | Any `INI_`-prefixed variable becomes a `server.ini` option, e.g. `INI_SleepAllowed=true` |
-
-## Multi-Instance
-
-Use `docker-compose.multi.yml` to run multiple servers sharing the same game install:
-
-```bash
-cp .env.example .env
-mkdir -p data-server1 data-server2 backups-server1 backups-server2
-docker compose -f docker-compose.multi.yml up -d
-```
-
-Each server must have unique ports. See [MULTI_INSTANCE.md](docs/MULTI_INSTANCE.md).
 
 ## Building
 
