@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
-	"github.com/faudil/project-zomboid-server-docker/internal/server"
-	"github.com/faudil/project-zomboid-server-docker/internal/steam"
-	"github.com/faudil/project-zomboid-server-docker/internal/webhook"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/server"
+	"github.com/tibuski/project-zomboid-server-docker/internal/steam"
+	"github.com/tibuski/project-zomboid-server-docker/internal/webhook"
 )
 
 // backupRunner is the subset of *backup.Manager the auto-updater needs, so

@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
 )
 
 // fakeRCONServer mimics the PZ RCON protocol: standard Source RCON packets.

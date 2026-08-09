@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
 )
 
 func setEnv(t *testing.T, vals map[string]string) {

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
 )
 
 // A nil DiscordWebhook (no webhook URL configured) must never panic.
@@ -16,6 +16,8 @@ func TestNotifyMethodsNilReceiver(t *testing.T) {
 	d.NotifyStart()
 	d.NotifyStop()
 	d.NotifyCrash(errors.New("boom"))
+	d.NotifyJoin("Bob")
+	d.NotifyLeave("Bob", "76561197995809551")
 }
 
 func TestNewDiscordNilWithoutURL(t *testing.T) {

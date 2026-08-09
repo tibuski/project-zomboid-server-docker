@@ -1,8 +1,7 @@
 # Project Zomboid Server Docker
 
-[![Build and Publish](https://github.com/faudil/project-zomboid-server-docker/actions/workflows/build.yml/badge.svg)](https://github.com/faudil/project-zomboid-server-docker/actions/workflows/build.yml)
-[![Docker Pulls](https://img.shields.io/docker/pulls/faudil/project-zomboid-server)](https://hub.docker.com/r/faudil/project-zomboid-server)
-[![License](https://img.shields.io/github/license/faudil/project-zomboid-server-docker)](LICENSE)
+[![Build and Publish](https://github.com/tibuski/project-zomboid-server-docker/actions/workflows/build.yml/badge.svg)](https://github.com/tibuski/project-zomboid-server-docker/actions/workflows/build.yml)
+[![License](https://img.shields.io/github/license/tibuski/project-zomboid-server-docker)](LICENSE)
 
 A Docker container for the Project Zomboid dedicated server. Built from the ground up to be simple, reliable, and well-documented.
 
@@ -22,7 +21,7 @@ A Docker container for the Project Zomboid dedicated server. Built from the grou
 
 ## Quick Start
 
-One-liner (Docker Hub image):
+One-liner (GitHub Container Registry image):
 
 ```bash
 docker run -d \
@@ -31,7 +30,7 @@ docker run -d \
   -e ADMIN_PASSWORD=your-admin-password \
   -e RCON_PASSWORD=your-rcon-password \
   -v pz-data:/home/steam/Zomboid \
-  faudil/project-zomboid-server:latest
+  ghcr.io/tibuski/project-zomboid-server-docker:latest
 ```
 
 Or with Docker Compose:

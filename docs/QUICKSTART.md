@@ -19,7 +19,7 @@ docker run -d \
   -e ADMIN_PASSWORD=your-secure-admin-password \
   -e RCON_PASSWORD=your-secure-rcon-password \
   -v pz-data:/home/steam/Zomboid \
-  faudil/project-zomboid-server:latest
+  ghcr.io/tibuski/project-zomboid-server-docker:latest
 ```
 
 Set `ADMIN_PASSWORD` and `RCON_PASSWORD` to secure values before running. First launch downloads the server files via DepotDownloader (~5-10 minutes depending on internet speed). Skip to [Monitor](#6-monitor).
@@ -27,7 +27,7 @@ Set `ADMIN_PASSWORD` and `RCON_PASSWORD` to secure values before running. First 
 ### Option B: Docker Compose (recommended for configuration)
 
 ```bash
-git clone https://github.com/faudil/project-zomboid-server-docker.git
+git clone https://github.com/tibuski/project-zomboid-server-docker.git
 cd project-zomboid-server-docker
 ```
 

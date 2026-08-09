@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
-	"github.com/faudil/project-zomboid-server-docker/internal/webhook"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/webhook"
 )
 
 type fakeServer struct {

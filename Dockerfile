@@ -1,4 +1,4 @@
-FROM golang:1.25-alpine@sha256:2b6edeb8c6b1071bfa16473f24bb7b7da0b1579009f97bb1542f239b14aabd8f AS builder
+FROM docker.io/golang:1.25-alpine@sha256:2b6edeb8c6b1071bfa16473f24bb7b7da0b1579009f97bb1542f239b14aabd8f AS builder
 
 ARG VERSION=dev
 
@@ -16,11 +16,13 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     go build -trimpath -ldflags="-s -w -X main.version=${VERSION}" -o /entrypoint ./cmd/entrypoint
 
-FROM cm2network/steamcmd:root@sha256:e6b6b3503bf0e41feafe12dc709c90151afba193e1292cac55d28a7d470b1493
+FROM docker.io/cm2network/steamcmd:root@sha256:e6b6b3503bf0e41feafe12dc709c90151afba193e1292cac55d28a7d470b1493
 
-LABEL maintainer="faudil"
+LABEL org.opencontainers.image.title="Project Zomboid Dedicated Server Docker"
 LABEL org.opencontainers.image.description="Project Zomboid Dedicated Server Docker"
-LABEL org.opencontainers.image.source="https://github.com/faudil/project-zomboid-server-docker"
+LABEL org.opencontainers.image.source="https://github.com/tibuski/project-zomboid-server-docker"
+LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.authors="tibuski"
 
 ARG DEPOT_DOWNLOADER_VERSION=3.4.0
 ARG DEPOT_DOWNLOADER_SHA256=a999dec66b4850fc961bd50366696d23c2d0fad7b18790e6a5647b2f19097a53
@@ -46,7 +48,7 @@ RUN apt-get update && \
 # works reliably. The self-contained build needs no .NET runtime and runs
 # with DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 (set by the entrypoint).
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN curl -sL "https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_${DEPOT_DOWNLOADER_VERSION}/DepotDownloader-linux-x64.zip" -o /tmp/dd.zip && \
+RUN curl -fsSL "https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_${DEPOT_DOWNLOADER_VERSION}/DepotDownloader-linux-x64.zip" -o /tmp/dd.zip && \
     echo "${DEPOT_DOWNLOADER_SHA256}  /tmp/dd.zip" | sha256sum -c - && \
     unzip -q /tmp/dd.zip -d /tmp/dd && \
     install -m 0755 /tmp/dd/DepotDownloader /usr/local/bin/depotdownloader && \

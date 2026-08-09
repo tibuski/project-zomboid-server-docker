@@ -7,3 +7,6 @@
 *.zip
 /debug
 /output
+# Go build caches dropped into the working dir by containerized tooling
+/.cache
+/.config

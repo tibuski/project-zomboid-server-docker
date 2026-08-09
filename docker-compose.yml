@@ -1,6 +1,6 @@
 services:
   zomboid:
-    image: ghcr.io/faudil/project-zomboid-server-docker:latest
+    image: ghcr.io/tibuski/project-zomboid-server-docker:latest
     container_name: project-zomboid
     restart: unless-stopped
     stop_grace_period: 120s

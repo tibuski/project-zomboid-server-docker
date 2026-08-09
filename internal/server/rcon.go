@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
 )
 
 // Project Zomboid's dedicated server RCON speaks the standard Source RCON

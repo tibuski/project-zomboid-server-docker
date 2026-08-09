@@ -39,7 +39,7 @@ Add a new service to your compose file:
 
 ```yaml
 zomboid-hc:
-  image: ghcr.io/faudil/project-zomboid-server-docker:latest
+  image: ghcr.io/tibuski/project-zomboid-server-docker:latest
   container_name: pz-hardcore
   restart: unless-stopped
   stop_grace_period: 60s

@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
-	"github.com/faudil/project-zomboid-server-docker/internal/server"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/server"
 )
 
 type Manager struct {

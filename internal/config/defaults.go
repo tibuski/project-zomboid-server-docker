@@ -23,6 +23,7 @@ type ServerConfig struct {
 	PauseOnEmpty          bool
 	AutosaveInterval      int
 	MapNames              string
+	SpawnRegions          string
 	PvP                   bool
 	ModNames              string
 	ModWorkshopIDs        string
@@ -53,6 +54,8 @@ type ServerConfig struct {
 	DiscordStop           bool
 	DiscordCrash          bool
 	DiscordUpdate         bool
+	DiscordJoin           bool
+	DiscordLeave          bool
 	TZ                    string
 	ServerDir             string
 	DataDir               string
@@ -80,6 +83,7 @@ func DefaultConfig() *ServerConfig {
 		PauseOnEmpty:          envBool("PAUSE_ON_EMPTY", true),
 		AutosaveInterval:      envInt("AUTOSAVE_INTERVAL", 15),
 		MapNames:              envStr("MAP_NAMES", "Muldraugh, KY"),
+		SpawnRegions:          envStr("SPAWN_REGIONS", ""),
 		PvP:                   envBool("PVP", true),
 		ModNames:              envStr("MOD_NAMES", ""),
 		ModWorkshopIDs:        envStr("MOD_WORKSHOP_IDS", ""),
@@ -110,6 +114,8 @@ func DefaultConfig() *ServerConfig {
 		DiscordStop:           envBool("DISCORD_NOTIFY_STOP", true),
 		DiscordCrash:          envBool("DISCORD_NOTIFY_CRASH", true),
 		DiscordUpdate:         envBool("DISCORD_NOTIFY_UPDATE", true),
+		DiscordJoin:           envBool("DISCORD_NOTIFY_JOIN", true),
+		DiscordLeave:          envBool("DISCORD_NOTIFY_LEAVE", true),
 		TZ:                    envStr("TZ", "UTC"),
 		ServerDir:             envStr("SERVER_DIR", "/home/steam/pzserver"),
 		DataDir:               envStr("DATA_DIR", "/home/steam/Zomboid"),

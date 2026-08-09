@@ -74,7 +74,7 @@ Example for a 16 GB host, 4 physical cores, `SANDBOX_MODE=max`:
 ```yaml
 services:
   zomboid:
-    image: ghcr.io/faudil/project-zomboid-server-docker:latest
+    image: ghcr.io/tibuski/project-zomboid-server-docker:latest
     restart: unless-stopped
     # 8g heap + ~25% JVM overhead, plus headroom for the OS cache
     mem_limit: 12g

@@ -1,3 +1,3 @@
-module github.com/faudil/project-zomboid-server-docker
+module github.com/tibuski/project-zomboid-server-docker
 
 go 1.23

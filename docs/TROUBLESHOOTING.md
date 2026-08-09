@@ -181,6 +181,6 @@ Your saves will be lost. Back up first if needed.
 
 ## Getting help
 
-- [GitHub Issues](https://github.com/faudil/project-zomboid-server-docker/issues)
+- [GitHub Issues](https://github.com/tibuski/project-zomboid-server-docker/issues)
 - [PZWiki Dedicated Server](https://pzwiki.net/wiki/Dedicated_Server)
 - [Project Zomboid Discord](https://discord.gg/theindiestone)

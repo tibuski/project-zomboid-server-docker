@@ -1,18 +1,21 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"strings"
 	"syscall"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/backup"
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
-	"github.com/faudil/project-zomboid-server-docker/internal/health"
-	"github.com/faudil/project-zomboid-server-docker/internal/server"
-	"github.com/faudil/project-zomboid-server-docker/internal/steam"
-	"github.com/faudil/project-zomboid-server-docker/internal/webhook"
+	"github.com/tibuski/project-zomboid-server-docker/internal/backup"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/health"
+	"github.com/tibuski/project-zomboid-server-docker/internal/presence"
+	"github.com/tibuski/project-zomboid-server-docker/internal/server"
+	"github.com/tibuski/project-zomboid-server-docker/internal/steam"
+	"github.com/tibuski/project-zomboid-server-docker/internal/webhook"
 )
 
 // version is injected at build time via -ldflags "-X main.version=...".
@@ -46,6 +49,15 @@ type serverRunner interface {
 	Wait() error
 	Stop() error
 }
+
+// presenceNotifier adapts *webhook.DiscordWebhook to presence.Notifier. The
+// methods no-op internally when the webhook URL or the per-event flag is off.
+type presenceNotifier struct {
+	discord *webhook.DiscordWebhook
+}
+
+func (p presenceNotifier) PlayerJoined(name string)        { p.discord.NotifyJoin(name) }
+func (p presenceNotifier) PlayerLeft(name, steamID string) { p.discord.NotifyLeave(name, steamID) }
 
 // Seams for tests, following the package-level override pattern used across
 // this codebase.
@@ -145,6 +157,10 @@ func run() error {
 		return fmt.Errorf("writing SandboxVars.lua: %w", err)
 	}
 
+	if err := cfg.WriteSpawnRegions(); err != nil {
+		return fmt.Errorf("writing spawnregions.lua: %w", err)
+	}
+
 	// The launcher passes vmArgs from ProjectZomboid64.json on the java
 	// command line, which overrides _JAVA_OPTIONS. Patch it so MAX_RAM,
 	// MIN_RAM, GC_CONFIG and JVM_EXTRA_ARGS actually take effect.
@@ -182,6 +198,13 @@ func run() error {
 	bk := newBackupManager(cfg)
 	bk.Scheduler()
 
+	// Tail the server's user log and report player joins/leaves to Discord.
+	presenceCtx, cancelPresence := context.WithCancel(context.Background())
+	if discord != nil && (cfg.DiscordJoin || cfg.DiscordLeave) {
+		tailer := presence.NewTailer(filepath.Join(cfg.DataDir, "Logs"), presenceNotifier{discord: discord})
+		go tailer.Run(presenceCtx)
+	}
+
 	// Single owner of signal handling: the shutdown path below. Manager.Wait()
 	// only waits for the server process to exit.
 	sigCh := make(chan os.Signal, 1)
@@ -192,6 +215,7 @@ func run() error {
 		fmt.Printf("Received %v, shutting down...\n", sig)
 		healthSrv.SetStatus("stopping")
 		discord.NotifyStop()
+		cancelPresence()
 
 		// A second signal forces immediate exit.
 		go func() {

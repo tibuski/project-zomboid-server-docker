@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
 )
 
 type Manager struct {

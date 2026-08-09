@@ -1,6 +1,7 @@
 # Discord Webhook
 
-Send server events (start, stop, crash) to a Discord channel via webhook.
+Send server events (start, stop, crash, player joins/leaves) to a Discord
+channel via webhook.
 
 ## Setup
 
@@ -23,6 +24,9 @@ DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/XXXXXXXX/YYYYYYYYYYYY
 DISCORD_NOTIFY_START=true
 DISCORD_NOTIFY_STOP=true
 DISCORD_NOTIFY_CRASH=true
+DISCORD_NOTIFY_UPDATE=true
+DISCORD_NOTIFY_JOIN=true
+DISCORD_NOTIFY_LEAVE=true
 ```
 
 ### 3. Restart
@@ -38,6 +42,14 @@ docker compose down && docker compose up -d
 | Server started | Green | Sent when the JVM process launches |
 | Server stopped | Red | Sent on graceful shutdown (`docker stop`) |
 | Server crashed | Yellow | Sent when the process exits unexpectedly |
+| Player joined | Green | Sent when a player joins (tailed from `Logs/*_user.txt`) |
+| Player left | Red | Sent when a player disconnects (tailed from `Logs/*_user.txt`) |
+
+Join/leave notifications are enabled by default whenever `DISCORD_WEBHOOK_URL`
+is set, and can be disabled with `DISCORD_NOTIFY_JOIN=false` /
+`DISCORD_NOTIFY_LEAVE=false`. The entrypoint tails the newest
+`Logs/*_user.txt` (PZ logs player logins/disconnects there) and resolves
+player names to Steam IDs.
 
 ## Example Embeds
 

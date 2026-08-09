@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
 )
 
 func newTestManager(t *testing.T, backups int) (*Manager, string) {

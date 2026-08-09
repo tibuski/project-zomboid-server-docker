@@ -42,6 +42,7 @@ they are intentionally not printed to the container logs.
 | `MAX_PLAYERS` | int | `16` | Maximum player slots |
 | `PVP` | bool | `true` | Enable player vs player |
 | `MAP_NAMES` | string | `Muldraugh, KY` | Semicolon-separated map names |
+| `SPAWN_REGIONS` | string | (empty) | Semicolon-separated spawn regions offered on the character-creation screen (map names contain commas). Each entry must exist in the server files as `media/maps/<name>/spawnpoints.lua`; invalid entries are skipped with a warning. Empty keeps the server's generated `spawnregions.lua` based on `MAP_NAMES` |
 | `AUTOSAVE_INTERVAL` | int | `15` | Minutes between autosaves |
 
 ## JVM & Memory
@@ -223,6 +224,8 @@ first login; the session is remembered afterwards.
 | `DISCORD_NOTIFY_STOP` | bool | `true` | Notify on server stop |
 | `DISCORD_NOTIFY_CRASH` | bool | `true` | Notify on server crash |
 | `DISCORD_NOTIFY_UPDATE` | bool | `true` | Notify when an automatic restart is triggered by an update |
+| `DISCORD_NOTIFY_JOIN` | bool | `true` | Notify when a player joins (reads `Logs/*_user.txt`) |
+| `DISCORD_NOTIFY_LEAVE` | bool | `true` | Notify when a player disconnects (reads `Logs/*_user.txt`) |
 
 ## Container Settings
 

@@ -1,5 +1,5 @@
 x-common: &common
-  image: ghcr.io/faudil/project-zomboid-server-docker:latest
+  image: ghcr.io/tibuski/project-zomboid-server-docker:latest
   restart: unless-stopped
   stop_grace_period: 120s
   init: true

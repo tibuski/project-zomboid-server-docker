@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
 )
 
 type DiscordWebhook struct {
@@ -114,4 +114,27 @@ func (d *DiscordWebhook) NotifyUpdate(updatedMods []string, gameUpdated bool) {
 
 	desc := fmt.Sprintf("**%s** will restart shortly to apply %s.", d.cfg.PublicName, strings.Join(parts, " and "))
 	_ = d.Send("\U0001f504 Server Restarting for Updates", desc, 0x5865F2)
+}
+
+// NotifyJoin announces a player connecting, fed by the log tailer. SteamID is
+// omitted from the message: at join time the user already has a display name.
+func (d *DiscordWebhook) NotifyJoin(name string) {
+	if d == nil || !d.cfg.DiscordJoin {
+		return
+	}
+	_ = d.Send("\U0001f44b Player Joined", fmt.Sprintf("**%s** joined the server", name), 0x57F287)
+}
+
+// NotifyLeave announces a player disconnecting. name may be empty if the
+// player connected before the tailer attached and the steamID could not be
+// resolved; the steamID is used as a fallback so the event is still useful.
+func (d *DiscordWebhook) NotifyLeave(name, steamID string) {
+	if d == nil || !d.cfg.DiscordLeave {
+		return
+	}
+	who := name
+	if who == "" {
+		who = steamID
+	}
+	_ = d.Send("\U0001f6aa Player Left", fmt.Sprintf("**%s** left the server", who), 0xED4245)
 }

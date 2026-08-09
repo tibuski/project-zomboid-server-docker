@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faudil/project-zomboid-server-docker/internal/config"
+	"github.com/tibuski/project-zomboid-server-docker/internal/config"
 )
 
 func writeModDir(t *testing.T, dir string, withModInfo bool) {
