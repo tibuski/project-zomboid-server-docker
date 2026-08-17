@@ -22,21 +22,10 @@ A Docker container for the Project Zomboid dedicated server. Built from the grou
 
 ## Quick Start
 
-One-liner (GitHub Container Registry image):
-
 ```bash
-docker run -d \
-  --name pz-server \
-  -p 16261:16261/udp -p 16262:16262/udp -p 27015:27015 \
-  -e ADMIN_PASSWORD=your-admin-password \
-  -e RCON_PASSWORD=your-rcon-password \
-  -v pz-data:/home/steam/Zomboid \
-  ghcr.io/tibuski/project-zomboid-server-docker:latest
-```
+git clone https://github.com/tibuski/project-zomboid-server-docker.git
+cd project-zomboid-server-docker
 
-Or with Docker Compose:
-
-```bash
 cp .env.example .env
 # Edit .env — ADMIN_PASSWORD and RCON_PASSWORD are optional:
 # if left empty they are auto-generated and stored in ./data/credentials.env
@@ -130,7 +119,7 @@ See [CONFIGURATION.md](docs/CONFIGURATION.md) for the full reference. The most i
 ## Building
 
 ```bash
-docker build -t project-zomboid-server .
+docker compose build
 ```
 
 ### Podman

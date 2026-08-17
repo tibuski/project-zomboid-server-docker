@@ -114,7 +114,7 @@ DISCORD_CHANNEL_ID=1234567890123456789
 ```
 
 ```bash
-docker compose up -d --build
+docker compose pull && docker compose up -d
 ```
 
 The sidecar idles quietly when the token/channel are not set, so the service

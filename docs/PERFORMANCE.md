@@ -155,9 +155,6 @@ logging:
     max-file: "3"
 ```
 
-If you run the container via `docker run` (no compose file), add
-`--log-opt max-size=10m --log-opt max-file=3`.
-
 ## 6. Host networking (advanced)
 
 The default bridge networking NATs UDP game traffic in the kernel. For the

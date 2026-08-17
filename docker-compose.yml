@@ -25,6 +25,7 @@ services:
   # zomboid service on the latest image. Idles until DISCORD_BOT_TOKEN and
   # DISCORD_CHANNEL_ID are set in .env - see docs/DISCORD.md.
   discordbot:
+    image: ghcr.io/tibuski/project-zomboid-server-docker/discordbot:latest
     build:
       context: .
       dockerfile: Dockerfile.discordbot
