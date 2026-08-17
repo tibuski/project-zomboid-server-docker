@@ -14,6 +14,7 @@ A Docker container for the Project Zomboid dedicated server. Built from the grou
 - **Automatic backups** -- Scheduled world backups with rotation
 - **Auto-restart on updates** -- Detects Workshop mod and game build updates while running, warns players, and restarts to apply them (optional)
 - **Discord webhook** -- Server start, stop, crash, update, and player join/leave notifications
+- **Discord restart command** -- Typing `restart server` in a Discord channel recreates the server on the latest image (sidecar bot)
 - **Spawn regions** -- Restrict the character-creation spawn screen to the maps you choose via `SPAWN_REGIONS`
 - **All config via env vars** -- No need to edit `.ini` files manually
 - **Go entrypoint** -- Single binary, no shell scripts, proper error handling
@@ -122,6 +123,7 @@ See [CONFIGURATION.md](docs/CONFIGURATION.md) for the full reference. The most i
 | `STEAM_USER` / `STEAM_PASS` | (empty) | Optional Steam account (owns Project Zomboid) — only needed for private branches or workshop mods when anonymous downloads fail |
 | `BACKUP_ENABLED` | `false` | Enable auto-backups |
 | `DISCORD_WEBHOOK_URL` | (empty) | Discord webhook URL |
+| `DISCORD_BOT_TOKEN` / `DISCORD_CHANNEL_ID` | (empty) | Enable the `restart server` Discord command (sidecar bot) |
 | `SANDBOX_*` | (empty) | Any `SANDBOX_`-prefixed variable becomes a `SandboxVars.lua` key (gameplay tuning) |
 | `INI_*` | (empty) | Any `INI_`-prefixed variable becomes a `server.ini` option, e.g. `INI_SleepAllowed=true` |
 

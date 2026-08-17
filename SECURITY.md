@@ -21,5 +21,9 @@ third-party binaries outside this project's control.
   control (the repo `.gitignore` already excludes them).
 - Do not publish the RCON port (`27015`) to the public internet; it speaks
   plaintext Source RCON. Restrict it to trusted networks if exposed.
+- The `discordbot` sidecar mounts `/var/run/docker.sock` (root-equivalent on
+  the host) so it can recreate the game service. Keep `DISCORD_BOT_TOKEN`
+  secret and the command channel private: anyone who can post
+  `restart server` there can restart the server.
 - `SERVER_NAME`, `SANDBOX_*`, `INI_*`, and `BACKUP_PATH` are validated at
   startup; any configuration error aborts the container with a clear message.

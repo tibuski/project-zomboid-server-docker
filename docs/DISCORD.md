@@ -1,7 +1,8 @@
 # Discord Webhook
 
 Send server events (start, stop, crash, player joins/leaves) to a Discord
-channel via webhook.
+channel via webhook, and optionally let the channel restart the server with a
+chat command.
 
 ## Setup
 
@@ -76,6 +77,78 @@ Server: servertest | 2026-01-15T20:00:00Z
 My Awesome Server exited unexpectedly: exit status 1
 Server: servertest | 2026-01-15T19:45:00Z
 ```
+
+## Restart Command (Discord Bot)
+
+Typing `restart server` (any capitalization) in the channel recreates the
+game server on the latest image - the equivalent of `docker compose pull &&
+docker compose up -d --force-recreate` for the `zomboid` service.
+
+A webhook can only *send* messages, so this uses a small sidecar container
+(`discordbot` service in `docker-compose.yml`) that polls the channel with a
+bot token.
+
+### 1. Create the bot
+
+1. Go to the [Discord Developer Portal](https://discord.com/developers/applications) → **New Application**
+2. Open **Bot** → **Reset Token** → copy the token (this is `DISCORD_BOT_TOKEN`)
+3. On the same page, enable the **Message Content** privileged intent (required, otherwise the bot cannot read message text)
+4. Invite the bot to your server with this URL (replace `CLIENT_ID` with the application's **Application ID**):
+
+   ```
+   https://discord.com/oauth2/authorize?client_id=CLIENT_ID&scope=bot&permissions=68608
+   ```
+
+   (`68608` = View Channel + Send Messages + Read Message History)
+
+### 2. Get the channel ID
+
+In Discord: **Settings → Advanced → Developer Mode** on, then right-click the
+channel → **Copy Channel ID**.
+
+### 3. Configure and start
+
+```env
+DISCORD_BOT_TOKEN=your-bot-token
+DISCORD_CHANNEL_ID=1234567890123456789
+```
+
+```bash
+docker compose up -d --build
+```
+
+The sidecar idles quietly when the token/channel are not set, so the service
+can stay in the compose file even if you don't use the command.
+
+### How it works
+
+- The channel is polled every 5 seconds (`POLL_INTERVAL`); only messages
+  posted *after* the bot started are considered.
+- The match is exact (surrounding whitespace ignored), so "please restart
+  server" does not trigger anything. Messages from other bots are ignored.
+- On a match the bot confirms in the channel, pulls the latest image, and
+  force-recreates **only the `zomboid` service** (a full `compose down` would
+  kill the sidecar itself mid-command). The usual 🟢 **Server Started**
+  webhook message announces when the server is actually back online.
+- A cooldown (`RESTART_COOLDOWN`, default `5m`) ignores further commands
+  after a restart.
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `DISCORD_BOT_TOKEN` | (empty) | Bot token from the developer portal |
+| `DISCORD_CHANNEL_ID` | (empty) | Channel to watch |
+| `POLL_INTERVAL` | `5s` | How often the channel is polled |
+| `RESTART_COOLDOWN` | `5m` | Minimum time between two restarts |
+| `RESTART_SERVICE` | `zomboid` | Compose service recreated on command |
+
+### Security notes
+
+- **Anyone who can post in the channel can restart the server.** Keep the
+  channel private or restrict it to trusted members.
+- The sidecar mounts `/var/run/docker.sock` to recreate the container; that
+  is root-equivalent access to the host. Only the sidecar gets the socket -
+  the game server container stays socket-free.
+- Keep the bot token in `.env` secret; it allows posting as the bot.
 
 ## Troubleshooting
 

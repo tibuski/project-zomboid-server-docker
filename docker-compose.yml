@@ -20,3 +20,29 @@ services:
       - ./data:/home/steam/Zomboid
       - ./server-files:/home/steam/pzserver
       - ./backups:/home/steam/Zomboid/backups
+
+  # Watches the Discord channel for "restart server" and recreates the
+  # zomboid service on the latest image. Idles until DISCORD_BOT_TOKEN and
+  # DISCORD_CHANNEL_ID are set in .env - see docs/DISCORD.md.
+  discordbot:
+    build:
+      context: .
+      dockerfile: Dockerfile.discordbot
+    container_name: project-zomboid-discordbot
+    restart: unless-stopped
+    init: true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    env_file:
+      - .env
+    environment:
+      # The project directory must sit at the same absolute path inside the
+      # sidecar as on the host, otherwise compose resolves the ./data etc.
+      # bind mounts to paths that do not exist on the host.
+      COMPOSE_DIR: ${COMPOSE_PROJECT_DIR:-${PWD}}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${COMPOSE_PROJECT_DIR:-${PWD}}:${COMPOSE_PROJECT_DIR:-${PWD}}:ro

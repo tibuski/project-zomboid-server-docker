@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Discord `restart server` channel command: a new `discordbot` sidecar service (bot token + channel ID in `.env`) polls the channel and recreates the `zomboid` service on the latest image (`docker compose pull` + `up -d --force-recreate`). Exact case-insensitive match, bot authors and pre-start channel history are ignored, and a 5-minute cooldown (`RESTART_COOLDOWN`) blocks restart spam
 - `SANDBOX_MODE` presets for performance: `apocalypse` (default), `performance` (world-cleanup: corpses 48h, blood 7d, rotten food 14d, rats off), `max` (adds reduced zombie population/rally groups for the best TPS)
 - Nested sandbox overrides via dot notation: `SANDBOX_ZombieConfig.PopulationMultiplier=0.5` and `SANDBOX_ZombieLore.Speed=4` write into the nested b42 tables (env overrides still win over `SANDBOX_MODE`)
 - `docs/PERFORMANCE.md` with JVM, sandbox, compose (cpuset/mem_limit/ulimits), storage and kernel tuning guidance
