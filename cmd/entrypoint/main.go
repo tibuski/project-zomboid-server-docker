@@ -171,10 +171,14 @@ func run() error {
 	}
 
 	discord := webhook.NewDiscord(cfg)
-	discord.NotifyStart()
 
 	healthSrv.SetStatus("starting")
 	srv := newServerManager(cfg)
+	// Announce the start only once the server is actually up: the hook fires
+	// when "RCON: listening on port" crosses the server's stdout, which the
+	// server only prints after the world has finished loading. The Discord
+	// POST runs in its own goroutine so it cannot stall the stdout pipe.
+	srv.OnBoot = func() { go discord.NotifyStart() }
 	if err := srv.Start(); err != nil {
 		discord.NotifyCrash(err)
 		return fmt.Errorf("starting server: %w", err)

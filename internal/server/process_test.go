@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -130,5 +131,68 @@ func TestStartPassesAdminPassword(t *testing.T) {
 	}
 	if !strings.Contains(args, "-adminpassword admin-pass") {
 		t.Errorf("args = %q, want -adminpassword admin-pass", args)
+	}
+}
+
+func TestBootWatcher(t *testing.T) {
+	fired := 0
+	w := newBootWatcher(func() { fired++ })
+
+	// A marker split across writes must still match, and a repeat of the
+	// marker must not fire the hook twice.
+	for _, chunk := range []string{
+		"LOG  : Network     , 1754900000000> RCON: listening on",
+		" port 27015\n",
+		"some other line\n",
+		"RCON: listening on port 27015\n",
+	} {
+		if _, err := io.WriteString(w, chunk); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if fired != 1 {
+		t.Errorf("hook fired %d times, want 1", fired)
+	}
+}
+
+func TestBootWatcherNoMatch(t *testing.T) {
+	fired := 0
+	w := newBootWatcher(func() { fired++ })
+	if _, err := io.WriteString(w, "LOG  : General, 1> server booting\n"); err != nil {
+		t.Fatal(err)
+	}
+	if fired != 0 {
+		t.Errorf("hook fired %d times, want 0", fired)
+	}
+}
+
+// End-to-end: a server whose stdout carries the boot marker fires OnBoot.
+func TestStartFiresOnBoot(t *testing.T) {
+	dir := t.TempDir()
+	script := filepath.Join(dir, "start-server.sh")
+	content := "#!/bin/bash\necho 'RCON: listening on port 27015'\n"
+	if err := os.WriteFile(script, []byte(content), 0755); err != nil {
+		t.Fatal(err)
+	}
+
+	cfg := config.DefaultConfig()
+	cfg.ServerDir = dir
+	cfg.DataDir = dir
+	cfg.AdminPassword = "admin-pass"
+
+	m := NewManager(cfg)
+	booted := make(chan struct{}, 1)
+	m.OnBoot = func() { booted <- struct{}{} }
+	if err := m.Start(); err != nil {
+		t.Fatalf("Start: %v", err)
+	}
+
+	select {
+	case <-booted:
+	case <-time.After(5 * time.Second):
+		t.Fatal("OnBoot did not fire")
+	}
+	if err := m.Wait(); err != nil {
+		t.Fatalf("Wait: %v", err)
 	}
 }

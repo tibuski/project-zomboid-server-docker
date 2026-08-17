@@ -1,7 +1,9 @@
 package server
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strings"
@@ -19,6 +21,11 @@ type Manager struct {
 	once    sync.Once
 	mu      sync.Mutex
 	exitErr error
+
+	// OnBoot fires once when the server reports its RCON responder listening,
+	// i.e. when the world has finished loading and players can join. It runs
+	// on the stdout copy goroutine and must not block. Nil disables the watch.
+	OnBoot func()
 }
 
 func NewManager(cfg *config.ServerConfig) *Manager {
@@ -48,7 +55,11 @@ func (m *Manager) Start() error {
 	}
 
 	m.cmd = exec.Command("bash", args...)
-	m.cmd.Stdout = os.Stdout
+	stdout := io.Writer(os.Stdout)
+	if m.OnBoot != nil {
+		stdout = io.MultiWriter(os.Stdout, newBootWatcher(m.OnBoot))
+	}
+	m.cmd.Stdout = stdout
 	m.cmd.Stderr = os.Stderr
 
 	env := os.Environ()
@@ -170,4 +181,38 @@ func (m *Manager) PID() int {
 		return m.cmd.Process.Pid
 	}
 	return 0
+}
+
+// bootMarker is printed on the server console when the RCON responder binds,
+// which only happens after the world has finished loading.
+const bootMarker = "RCON: listening on port"
+
+// bootWatcher tees the server's stdout and fires hook the first time the boot
+// marker crosses the stream. hook runs on the stdout copy goroutine and must
+// not block; slow work belongs in a goroutine of its own.
+type bootWatcher struct {
+	once sync.Once
+	hook func()
+	tail []byte // trailing bytes, to catch a marker split across writes
+}
+
+func newBootWatcher(hook func()) *bootWatcher {
+	return &bootWatcher{hook: hook}
+}
+
+func (w *bootWatcher) Write(p []byte) (int, error) {
+	haystack := make([]byte, 0, len(w.tail)+len(p))
+	haystack = append(haystack, w.tail...)
+	haystack = append(haystack, p...)
+	if bytes.Contains(haystack, []byte(bootMarker)) {
+		w.once.Do(w.hook)
+	}
+	// Keep the last len(marker)-1 bytes so a marker split across two writes
+	// still matches on the next one.
+	if n := len(bootMarker) - 1; len(haystack) > n {
+		w.tail = append(w.tail[:0], haystack[len(haystack)-n:]...)
+	} else {
+		w.tail = append(w.tail[:0], haystack...)
+	}
+	return len(p), nil
 }
