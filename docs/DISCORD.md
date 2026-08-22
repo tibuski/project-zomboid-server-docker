@@ -40,7 +40,7 @@ docker compose down && docker compose up -d
 
 | Event | Color | Description |
 |-------|-------|-------------|
-| Server started | Green | Sent when the server has finished booting (`RCON: listening on port` on stdout) |
+| Server started | Green | Sent when the JVM process launches |
 | Server stopped | Red | Sent on graceful shutdown (`docker stop`) |
 | Server crashed | Yellow | Sent when the process exits unexpectedly |
 | Player joined | Green | Sent when a player joins (tailed from `Logs/*_user.txt`) |

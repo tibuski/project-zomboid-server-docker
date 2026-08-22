@@ -27,7 +27,6 @@
 - Removed the stale 9.8MB `entrypoint` binary from the repo root (gitignored build artifact)
 
 ### Changed
-- Discord "Server Started" notification now fires when the server has actually finished booting: the entrypoint watches the server's stdout for the `RCON: listening on port` marker instead of announcing at JVM process launch
 - Nested sandbox tables (flat `SANDBOX_ZombieConfig=...`) are only rendered through the mode/block builders; unsupported nested tables warn and are ignored
 - `backup.Manager.Scheduler` no longer takes the server manager (decoupled; RCON save only needs the config)
 - List parsing unified (`config.ParseList`) across config and steam packages
